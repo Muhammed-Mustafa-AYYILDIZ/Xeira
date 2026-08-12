@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Memory Box</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Zarif bir görünüm için Google Fonts (Lora ve Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Karşılama Ekranı -->
+    <div id="welcome-screen" class="active">
+        <div class="welcome-content">
+            <h1 class="serif-title">OUR MEMORY BOX</h1>
+            <p class="subtitle">A little place for everything<br>I don't want to forget.</p>
+            <p class="date-range">2025 — 2026</p>
+            <button id="open-box-btn">OPEN THE BOX</button>
+        </div>
+    </div>
+
+    <!-- Ana İçerik (Başlangıçta Gizli) -->
+    <main id="main-content" class="hidden">
+        
+        <!-- Üst Menü ve Müzik Kontrolü -->
+        <header>
+            <div class="music-player">
+                <button id="music-toggle" aria-label="Play Music">
+                    <span id="music-icon">♫</span> Our Song
+                </button>
+                <audio id="bg-music" loop>
+                    <source src="assets/music/our-song.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            
+            <nav id="main-nav">
+                <button class="nav-btn active" data-target="photos">PHOTOS</button>
+                <button class="nav-btn" data-target="places">PLACES</button>
+                <button class="nav-btn" data-target="timeline">TIMELINE</button>
+                <button class="nav-btn" data-target="memories">LITTLE MEMORIES</button>
+                <button class="nav-btn" data-target="letter">LETTER</button>
+            </nav>
+        </header>
+
+        <!-- Bölümler -->
+        <div class="content-container">
+            
+            <!-- PHOTOS BÖLÜMÜ -->
+            <section id="photos" class="section active">
+                <h2 class="serif-title section-title">Captured Moments</h2>
+                <div class="photo-grid" id="photo-container">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- PLACES BÖLÜMÜ -->
+            <section id="places" class="section">
+                <h2 class="serif-title section-title">Where We've Been</h2>
+                <div class="places-container" id="places-container">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- TIMELINE BÖLÜMÜ -->
+            <section id="timeline" class="section">
+                <h2 class="serif-title section-title">Our Story</h2>
+                <div class="timeline-container" id="timeline-container">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- LITTLE MEMORIES BÖLÜMÜ -->
+            <section id="memories" class="section">
+                <h2 class="serif-title section-title">Little Things</h2>
+                <div class="memories-grid" id="memories-container">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- LETTER BÖLÜMÜ -->
+            <section id="letter" class="section">
+                <div class="letter-container">
+                    <div class="envelope" id="envelope">
+                        <div class="envelope-flap"></div>
+                        <div class="envelope-text">For You</div>
+                    </div>
+                    <div class="letter-content hidden" id="letter-content">
+                        <!-- JS ile doldurulacak -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Fotoğraf Lightbox (Modal) -->
+    <div id="lightbox" class="hidden">
+        <div class="lightbox-content">
+            <span class="close-lightbox">&times;</span>
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-info">
+                <h3 id="lightbox-title" class="serif-title"></h3>
+                <p id="lightbox-date" class="date-text"></p>
+                <p id="lightbox-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
