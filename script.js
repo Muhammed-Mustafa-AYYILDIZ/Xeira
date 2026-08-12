@@ -1,20 +1,25 @@
 /**
  * OUR MEMORY BOX - DATA CONFIGURATION
- * Burada yer alan verileri gerçek anılar, fotoğraflar ve notlarla güncelleyebilirsin.
  */
 
 const data = {
     photos: [
         {
             image: "assets/images/placeholder.jpg",
-            title: "İlk Fotoğrafımız",
+            title: "ADD TITLE",
             date: "2025",
             description: "ADD DESCRIPTION"
         },
         {
             image: "assets/images/placeholder.jpg",
-            title: "Gülümseme",
+            title: "ADD TITLE",
             date: "2025",
+            description: "ADD DESCRIPTION"
+        },
+        {
+            image: "assets/images/placeholder.jpg",
+            title: "ADD TITLE",
+            date: "2026",
             description: "ADD DESCRIPTION"
         }
     ],
@@ -60,21 +65,28 @@ const data = {
             events: [
                 { title: "First Conversation", desc: "ADD DESCRIPTION" },
                 { title: "First Meeting", desc: "ADD DESCRIPTION" },
+                { title: "First Kiss", desc: "ADD DESCRIPTION" }
             ]
         },
         {
             year: "2026",
             events: [
-                { title: "Project Xeira", desc: "Building something special together." },
-                { title: "First Anniversary", desc: "August 2026" }
+                { title: "Giresun", desc: "ADD DESCRIPTION" },
+                { title: "Izmir", desc: "ADD DESCRIPTION" },
+                { title: "Antalya", desc: "ADD DESCRIPTION" },
+                { title: "One Year", desc: "August 2026" }
             ]
         }
     ],
 
     memories: [
         {
-            text: "\"Buraya daha sonra gerçek bir anı gelecek. Küçük bir mesaj veya komik bir detay.\"",
+            text: "\"Buraya daha sonra gerçek bir anı gelecek. Birlikte yaşadığımız sıradan ama güzel anlar.\"",
             date: "2025"
+        },
+        {
+            text: "\"ADD MEMORY\"",
+            date: "2026"
         },
         {
             text: "\"ADD MEMORY\"",
@@ -85,7 +97,7 @@ const data = {
     letter: `
         <p class="date-text" style="text-align:right;">August 2026</p>
         <br>
-        <p>Değerli Gül,</p>
+        <p>Gül,</p>
         <br>
         <p>[ YOUR LETTER GOES HERE ]</p>
         <br>
@@ -102,17 +114,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
+    renderPhotos();
+    renderPlaces();
+    renderTimeline();
+    renderMemories();
+
     setupWelcomeScreen();
     setupNavigation();
     setupMusic();
     setupLightbox();
     setupLetter();
-    
-    // Verileri DOM'a render et
-    renderPhotos();
-    renderPlaces();
-    renderTimeline();
-    renderMemories();
+    setupScrollReveal();
 }
 
 // 1. Karşılama Ekranı Geçişi
@@ -123,24 +135,27 @@ function setupWelcomeScreen() {
 
     btn.addEventListener("click", () => {
         welcomeScreen.classList.remove("active");
+        welcomeScreen.setAttribute("aria-hidden", "true");
+        
         setTimeout(() => {
             mainContent.classList.remove("hidden");
-        }, 1000); // CSS transition süresi ile uyumlu
+            mainContent.setAttribute("aria-hidden", "false");
+            // Render sonrası scroll efekti tetiklemesi için
+            setTimeout(handleScroll, 100); 
+        }, 1000);
     });
 }
 
-// 2. Navigasyon (Tab) Mantığı
+// 2. Navigasyon
 function setupNavigation() {
     const navBtns = document.querySelectorAll(".nav-btn");
     const sections = document.querySelectorAll(".section");
 
     navBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-            // Aktif buton stilini değiştir
             navBtns.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
 
-            // Bölümleri değiştir
             const target = btn.getAttribute("data-target");
             sections.forEach(sec => {
                 if(sec.id === target) {
@@ -149,11 +164,14 @@ function setupNavigation() {
                     sec.classList.remove("active");
                 }
             });
+            // Yeni tab açıldığında animasyonları tetikle
+            handleScroll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
-// 3. Müzik Oynatıcı
+// 3. Müzik Oynatıcı (ılılı kaldırıldı, ►/❚❚ mantığı)
 function setupMusic() {
     const btn = document.getElementById("music-toggle");
     const audio = document.getElementById("bg-music");
@@ -161,30 +179,43 @@ function setupMusic() {
     let isPlaying = false;
 
     btn.addEventListener("click", () => {
-        if (!audio.src || audio.src.includes("null")) return; // Dosya yoksa hata verme
+        if (!audio.src || audio.src.includes("null")) return; 
         
         if (isPlaying) {
             audio.pause();
-            icon.textContent = "♫";
+            icon.textContent = "▶"; // Play icon
             btn.style.opacity = "0.7";
         } else {
-            audio.play().catch(e => console.log("Müzik dosyası bulunamadı."));
-            icon.textContent = "ılılı";
+            audio.play().catch(() => console.log("Müzik dosyası bulunamadı."));
+            icon.textContent = "⏸"; // Pause icon
             btn.style.opacity = "1";
         }
         isPlaying = !isPlaying;
     });
 }
 
-// 4. Render Fonksiyonları (HTML'e veri basma)
+// 4. Render Fonksiyonları
 function renderPhotos() {
     const container = document.getElementById("photo-container");
-    data.photos.forEach((photo, index) => {
+    data.photos.forEach(photo => {
         const card = document.createElement("div");
-        card.className = "photo-card";
-        card.innerHTML = `<img src="${photo.image}" alt="${photo.title}" loading="lazy">`;
+        card.className = "photo-card fade-in-on-scroll";
+        card.setAttribute("tabindex", "0"); // Klavye ile odaklanılabilir
         
-        card.addEventListener("click", () => openLightbox(photo));
+        card.innerHTML = `
+            <img src="${photo.image}" alt="${photo.title}" loading="lazy">
+            <div class="photo-overlay">
+                <span class="overlay-title">${photo.title}</span>
+                <span class="overlay-date">${photo.date}</span>
+            </div>
+        `;
+        
+        const openHandler = () => openLightbox(photo);
+        card.addEventListener("click", openHandler);
+        card.addEventListener("keypress", (e) => {
+            if(e.key === "Enter") openHandler();
+        });
+        
         container.appendChild(card);
     });
 }
@@ -193,15 +224,15 @@ function renderPlaces() {
     const container = document.getElementById("places-container");
     data.places.forEach(place => {
         const card = document.createElement("div");
-        card.className = "place-card";
+        card.className = "place-card fade-in-on-scroll";
         card.innerHTML = `
-            <div class="place-info">
-                <h3>${place.name}</h3>
-                <p class="date-text">${place.subtitle}</p>
-                <p style="margin-top:1rem; font-size:0.9rem; color:#555;">${place.description}</p>
+            <div class="place-image-wrapper">
+                <img src="${place.image}" loading="lazy" alt="${place.name}">
             </div>
-            <div style="flex:1;">
-                <img src="${place.image}" style="width:100%; height:200px; object-fit:cover;" loading="lazy" alt="${place.name}">
+            <div class="place-info">
+                <h3 class="serif-title">${place.name}</h3>
+                <p class="date-text">${place.subtitle}</p>
+                <p class="place-desc">${place.description}</p>
             </div>
         `;
         container.appendChild(card);
@@ -212,18 +243,18 @@ function renderTimeline() {
     const container = document.getElementById("timeline-container");
     data.timeline.forEach(group => {
         const yearBlock = document.createElement("div");
-        yearBlock.innerHTML = `<h3 class="serif-title" style="margin: 2rem 0 1rem -35px; background:var(--bg-color); display:inline-block; padding-right:10px;">${group.year}</h3>`;
-        container.appendChild(yearBlock);
-
+        yearBlock.className = "timeline-year-block fade-in-on-scroll";
+        yearBlock.innerHTML = `<h3 class="timeline-year serif-title">${group.year}</h3>`;
+        
         group.events.forEach(ev => {
-            const item = document.createElement("div");
-            item.className = "timeline-item";
-            item.innerHTML = `
-                <h4 style="margin-bottom:0.3rem;">${ev.title}</h4>
-                <p style="font-size:0.9rem; color:#666;">${ev.desc}</p>
+            yearBlock.innerHTML += `
+                <div class="timeline-item">
+                    <h4>${ev.title}</h4>
+                    <p>${ev.desc}</p>
+                </div>
             `;
-            container.appendChild(item);
         });
+        container.appendChild(yearBlock);
     });
 }
 
@@ -231,45 +262,82 @@ function renderMemories() {
     const container = document.getElementById("memories-container");
     data.memories.forEach(mem => {
         const card = document.createElement("div");
-        card.className = "memory-card";
+        card.className = "memory-card fade-in-on-scroll";
         card.innerHTML = `
-            <p>${mem.text}</p>
-            <p class="date-text" style="margin-top:1rem; text-align:right;">— ${mem.date}</p>
+            <p class="memory-text">${mem.text}</p>
+            <p class="date-text" style="text-align:right;">— ${mem.date}</p>
         `;
         container.appendChild(card);
     });
 }
 
-// 5. Lightbox Mantığı
+// 5. Lightbox Mantığı (ESC ile Kapatma eklendi)
 function setupLightbox() {
     const lightbox = document.getElementById("lightbox");
     const closeBtn = document.querySelector(".close-lightbox");
     
-    closeBtn.addEventListener("click", () => lightbox.classList.add("hidden"));
+    const closeLightbox = () => {
+        lightbox.classList.add("hidden");
+        lightbox.setAttribute("aria-hidden", "true");
+    };
+
+    closeBtn.addEventListener("click", closeLightbox);
     lightbox.addEventListener("click", (e) => {
-        if(e.target === lightbox) lightbox.classList.add("hidden");
+        if(e.target.classList.contains("lightbox-overlay")) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape" && !lightbox.classList.contains("hidden")) {
+            closeLightbox();
+        }
     });
 }
 
 function openLightbox(photo) {
     document.getElementById("lightbox-img").src = photo.image;
+    document.getElementById("lightbox-img").alt = photo.title;
     document.getElementById("lightbox-title").textContent = photo.title;
     document.getElementById("lightbox-date").textContent = photo.date;
     document.getElementById("lightbox-desc").textContent = photo.description;
     
-    document.getElementById("lightbox").classList.remove("hidden");
+    const lightbox = document.getElementById("lightbox");
+    lightbox.classList.remove("hidden");
+    lightbox.setAttribute("aria-hidden", "false");
 }
 
-// 6. Zarf ve Mektup Mantığı
+// 6. Zarf ve Mektup Mantığı (Gerçekçi Açılış Animasyonu)
 function setupLetter() {
-    const envelope = document.getElementById("envelope");
+    const envelopeWrapper = document.getElementById("envelope-wrapper");
     const letterContent = document.getElementById("letter-content");
     
-    // Mektup içeriğini data'dan alıp yerleştir
     letterContent.innerHTML = data.letter;
 
-    envelope.addEventListener("click", () => {
-        envelope.style.display = "none";
-        letterContent.classList.remove("hidden");
+    envelopeWrapper.addEventListener("click", () => {
+        if (!envelopeWrapper.classList.contains("open")) {
+            envelopeWrapper.classList.add("open");
+            // Zarf kapağı açıldıktan sonra içeriği göster
+            setTimeout(() => {
+                envelopeWrapper.style.display = "none";
+                letterContent.classList.remove("hidden");
+            }, 600);
+        }
+    });
+}
+
+// 7. Micro-Interactions (Scroll Reveal)
+function setupScrollReveal() {
+    window.addEventListener("scroll", handleScroll);
+}
+
+function handleScroll() {
+    const elements = document.querySelectorAll(".fade-in-on-scroll");
+    const windowHeight = window.innerHeight;
+    
+    elements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // Elementin üst kısmı ekranın %90'ına geldiğinde görünür yap
+        if (rect.top <= windowHeight * 0.9) {
+            el.classList.add("is-visible");
+        }
     });
 }

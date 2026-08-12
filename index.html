@@ -2,41 +2,40 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Our Memory Box</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Zarif bir görünüm için Google Fonts (Lora ve Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <!-- Daha zarif, nostaljik fontlar: Playfair Display ve Lato -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Karşılama Ekranı -->
-    <div id="welcome-screen" class="active">
+    <!-- Karşılama Ekranı (Fiziksel Kutu Açılış Hissi) -->
+    <div id="welcome-screen" class="active" aria-hidden="false">
         <div class="welcome-content">
-            <h1 class="serif-title">OUR MEMORY BOX</h1>
+            <h1 class="serif-title welcome-title">OUR MEMORY BOX</h1>
             <p class="subtitle">A little place for everything<br>I don't want to forget.</p>
             <p class="date-range">2025 — 2026</p>
-            <button id="open-box-btn">OPEN THE BOX</button>
+            <button id="open-box-btn" aria-label="Kutuyu Aç">OPEN THE BOX</button>
         </div>
     </div>
 
-    <!-- Ana İçerik (Başlangıçta Gizli) -->
-    <main id="main-content" class="hidden">
+    <!-- Ana İçerik -->
+    <main id="main-content" class="hidden" aria-hidden="true">
         
-        <!-- Üst Menü ve Müzik Kontrolü -->
         <header>
             <div class="music-player">
-                <button id="music-toggle" aria-label="Play Music">
-                    <span id="music-icon">♫</span> Our Song
+                <button id="music-toggle" aria-label="Müziği Başlat">
+                    <span id="music-icon">▶</span> <span class="music-text">Our Song</span>
                 </button>
-                <audio id="bg-music" loop>
+                <audio id="bg-music" loop preload="none">
                     <source src="assets/music/our-song.mp3" type="audio/mpeg">
                 </audio>
             </div>
             
-            <nav id="main-nav">
+            <nav id="main-nav" aria-label="Ana Menü">
                 <button class="nav-btn active" data-target="photos">PHOTOS</button>
                 <button class="nav-btn" data-target="places">PLACES</button>
                 <button class="nav-btn" data-target="timeline">TIMELINE</button>
@@ -45,61 +44,67 @@
             </nav>
         </header>
 
-        <!-- Bölümler -->
         <div class="content-container">
             
-            <!-- PHOTOS BÖLÜMÜ -->
+            <!-- PHOTOS BÖLÜMÜ (Editorial Hissiyat) -->
             <section id="photos" class="section active">
-                <h2 class="serif-title section-title">Captured Moments</h2>
+                <h2 class="serif-title section-title fade-in-on-scroll">Captured Moments</h2>
                 <div class="photo-grid" id="photo-container">
-                    <!-- JS ile doldurulacak -->
+                    <!-- JS -->
                 </div>
             </section>
 
-            <!-- PLACES BÖLÜMÜ -->
+            <!-- PLACES BÖLÜMÜ (Chapter Hissiyatı) -->
             <section id="places" class="section">
-                <h2 class="serif-title section-title">Where We've Been</h2>
+                <h2 class="serif-title section-title fade-in-on-scroll">Where We've Been</h2>
                 <div class="places-container" id="places-container">
-                    <!-- JS ile doldurulacak -->
+                    <!-- JS -->
                 </div>
             </section>
 
-            <!-- TIMELINE BÖLÜMÜ -->
+            <!-- TIMELINE BÖLÜMÜ (Okunabilir, Nostaljik) -->
             <section id="timeline" class="section">
-                <h2 class="serif-title section-title">Our Story</h2>
+                <h2 class="serif-title section-title fade-in-on-scroll">Our Story</h2>
                 <div class="timeline-container" id="timeline-container">
-                    <!-- JS ile doldurulacak -->
+                    <!-- JS -->
                 </div>
             </section>
 
-            <!-- LITTLE MEMORIES BÖLÜMÜ -->
+            <!-- LITTLE MEMORIES BÖLÜMÜ (Scrapbook Hissiyatı) -->
             <section id="memories" class="section">
-                <h2 class="serif-title section-title">Little Things</h2>
+                <h2 class="serif-title section-title fade-in-on-scroll">Little Things</h2>
                 <div class="memories-grid" id="memories-container">
-                    <!-- JS ile doldurulacak -->
+                    <!-- JS -->
                 </div>
             </section>
 
-            <!-- LETTER BÖLÜMÜ -->
+            <!-- LETTER BÖLÜMÜ (Fiziksel Zarf Deneyimi) -->
             <section id="letter" class="section">
-                <div class="letter-container">
-                    <div class="envelope" id="envelope">
-                        <div class="envelope-flap"></div>
-                        <div class="envelope-text">For You</div>
+                <div class="letter-container fade-in-on-scroll">
+                    <div class="envelope-wrapper" id="envelope-wrapper">
+                        <div class="envelope">
+                            <div class="envelope-flap"></div>
+                            <div class="envelope-body">
+                                <span class="envelope-text serif-title">For You</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="letter-content hidden" id="letter-content">
-                        <!-- JS ile doldurulacak -->
+                        <!-- JS -->
                     </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- Fotoğraf Lightbox (Modal) -->
-    <div id="lightbox" class="hidden">
+    <!-- Fotoğraf Lightbox -->
+    <div id="lightbox" class="hidden" aria-hidden="true" role="dialog">
+        <div class="lightbox-overlay"></div>
         <div class="lightbox-content">
-            <span class="close-lightbox">&times;</span>
-            <img id="lightbox-img" src="" alt="">
+            <button class="close-lightbox" aria-label="Kapat">&times;</button>
+            <div class="lightbox-image-wrapper">
+                <img id="lightbox-img" src="" alt="Anı Fotoğrafı">
+            </div>
             <div class="lightbox-info">
                 <h3 id="lightbox-title" class="serif-title"></h3>
                 <p id="lightbox-date" class="date-text"></p>
