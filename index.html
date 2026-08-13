@@ -2,17 +2,17 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- FIX: maximum-scale=1.0 / user-scalable=no kaldırıldı — kullanıcı zoom yapabilmeli -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Memory Box</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Daha zarif, nostaljik fontlar: Playfair Display ve Lato -->
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Karşılama Ekranı (Fiziksel Kutu Açılış Hissi) -->
+    <!-- Karşılama Ekranı -->
     <div id="welcome-screen" class="active" aria-hidden="false">
         <div class="welcome-content">
             <h1 class="serif-title welcome-title">OUR MEMORY BOX</h1>
@@ -24,7 +24,7 @@
 
     <!-- Ana İçerik -->
     <main id="main-content" class="hidden" aria-hidden="true">
-        
+
         <header>
             <div class="music-player">
                 <button id="music-toggle" aria-label="Müziği Başlat">
@@ -34,7 +34,7 @@
                     <source src="assets/music/our-song.mp3" type="audio/mpeg">
                 </audio>
             </div>
-            
+
             <nav id="main-nav" aria-label="Ana Menü">
                 <button class="nav-btn active" data-target="photos">PHOTOS</button>
                 <button class="nav-btn" data-target="places">PLACES</button>
@@ -45,43 +45,32 @@
         </header>
 
         <div class="content-container">
-            
-            <!-- PHOTOS BÖLÜMÜ (Editorial Hissiyat) -->
+
             <section id="photos" class="section active">
                 <h2 class="serif-title section-title fade-in-on-scroll">Captured Moments</h2>
-                <div class="photo-grid" id="photo-container">
-                    <!-- JS -->
-                </div>
+                <div class="photo-grid" id="photo-container"></div>
             </section>
 
-            <!-- PLACES BÖLÜMÜ (Chapter Hissiyatı) -->
             <section id="places" class="section">
                 <h2 class="serif-title section-title fade-in-on-scroll">Where We've Been</h2>
-                <div class="places-container" id="places-container">
-                    <!-- JS -->
-                </div>
+                <div class="places-container" id="places-container"></div>
             </section>
 
-            <!-- TIMELINE BÖLÜMÜ (Okunabilir, Nostaljik) -->
             <section id="timeline" class="section">
                 <h2 class="serif-title section-title fade-in-on-scroll">Our Story</h2>
-                <div class="timeline-container" id="timeline-container">
-                    <!-- JS -->
-                </div>
+                <div class="timeline-container" id="timeline-container"></div>
             </section>
 
-            <!-- LITTLE MEMORIES BÖLÜMÜ (Scrapbook Hissiyatı) -->
             <section id="memories" class="section">
                 <h2 class="serif-title section-title fade-in-on-scroll">Little Things</h2>
-                <div class="memories-grid" id="memories-container">
-                    <!-- JS -->
-                </div>
+                <div class="memories-grid" id="memories-container"></div>
             </section>
 
-            <!-- LETTER BÖLÜMÜ (Fiziksel Zarf Deneyimi) -->
             <section id="letter" class="section">
                 <div class="letter-container fade-in-on-scroll">
-                    <div class="envelope-wrapper" id="envelope-wrapper">
+                    <!-- FIX: tabindex/role/aria-label eklendi — klavye ile açılabilir -->
+                    <div class="envelope-wrapper" id="envelope-wrapper"
+                         tabindex="0" role="button" aria-label="Mektubu açmak için tıklayın">
                         <div class="envelope">
                             <div class="envelope-flap"></div>
                             <div class="envelope-body">
@@ -89,16 +78,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="letter-content hidden" id="letter-content">
-                        <!-- JS -->
-                    </div>
+                    <!-- FIX: tabindex="-1" eklendi — programatik focus için -->
+                    <div class="letter-content hidden" id="letter-content" tabindex="-1"></div>
                 </div>
             </section>
+
         </div>
     </main>
 
     <!-- Fotoğraf Lightbox -->
-    <div id="lightbox" class="hidden" aria-hidden="true" role="dialog">
+    <!-- FIX: aria-modal + aria-labelledby eklendi -->
+    <div id="lightbox" class="hidden" aria-hidden="true"
+         role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
         <div class="lightbox-overlay"></div>
         <div class="lightbox-content">
             <button class="close-lightbox" aria-label="Kapat">&times;</button>

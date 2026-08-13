@@ -1,15 +1,15 @@
 /* --- DEĞİŞKENLER VE TEMEL AYARLAR --- */
 :root {
-    --bg-color: #f5f2eb; /* Daha sıcak, nostaljik krem */
-    --text-main: #33312e; /* Yumuşak, mürekkebe yakın siyah */
+    --bg-color: #f5f2eb;
+    --text-main: #33312e;
     --text-light: #6e6a64;
-    --accent-color: #947e68; /* Vurgu: Soluk kahve/toprak */
+    --accent-color: #947e68;
     --card-bg: #fcfbf9;
     --border-color: #e6dfd3;
-    
+
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'Lato', sans-serif;
-    
+
     --transition-slow: 1s ease-in-out;
     --transition-fast: 0.3s ease;
 }
@@ -29,7 +29,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Tipografi */
+/* --- TİPOGRAFİ --- */
 .serif-title {
     font-family: var(--font-serif);
     font-weight: 400;
@@ -47,7 +47,7 @@ body {
     color: var(--text-main);
 }
 
-/* --- MICRO-INTERACTIONS (Scroll Reveal) --- */
+/* --- SCROLL REVEAL --- */
 .fade-in-on-scroll {
     opacity: 0;
     transform: translateY(20px);
@@ -56,6 +56,58 @@ body {
 .fade-in-on-scroll.is-visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* --- REDUCED MOTION --- */
+/* Kullanıcı sistem seviyesinde hareket azaltma tercih etmişse animasyonlar devre dışı */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-on-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .fade-in-on-scroll.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+    .section.active {
+        animation: none;
+    }
+    .envelope-flap {
+        transition: none;
+    }
+    .envelope:hover {
+        transform: none;
+    }
+    .memory-card,
+    .memory-card:hover {
+        transform: none;
+        transition: none;
+    }
+    .photo-card img {
+        transition: none;
+    }
+    .photo-card:hover img {
+        transform: none;
+    }
+    .photo-overlay {
+        transition: none;
+    }
+    #welcome-screen {
+        transition: none;
+    }
+    #main-content {
+        transition: none;
+    }
+    .nav-btn::after {
+        transition: none;
+    }
+    #open-box-btn {
+        transition: none;
+    }
+    .music-player button {
+        transition: none;
+    }
 }
 
 /* --- KARŞILAMA EKRANI --- */
@@ -74,7 +126,7 @@ body {
 #welcome-screen:not(.active) {
     opacity: 0;
     visibility: hidden;
-    transform: scale(1.02); /* Kutunun hafifçe açılması hissi */
+    transform: scale(1.02);
 }
 
 .welcome-title {
@@ -107,13 +159,14 @@ body {
     cursor: pointer;
     transition: all var(--transition-fast);
 }
-#open-box-btn:hover, #open-box-btn:focus-visible {
+#open-box-btn:hover,
+#open-box-btn:focus-visible {
     background: var(--text-main);
     color: var(--bg-color);
     outline: none;
 }
 
-/* --- ANA İÇERİK & MENÜ --- */
+/* --- ANA İÇERİK --- */
 #main-content {
     min-height: 100vh;
     display: flex;
@@ -134,7 +187,7 @@ header {
     gap: 2rem;
 }
 
-/* Müzik Player */
+/* --- MÜZİK PLAYER --- */
 .music-player button {
     background: transparent;
     border: none;
@@ -148,12 +201,19 @@ header {
     gap: 8px;
     transition: color var(--transition-fast);
 }
-.music-player button:hover {
+.music-player button:hover,
+.music-player button:focus-visible {
     color: var(--accent-color);
+}
+/* FIX: focus-visible stili eklendi */
+.music-player button:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+    border-radius: 2px;
 }
 #music-icon { font-size: 1.1rem; }
 
-/* Navigasyon */
+/* --- NAVİGASYON --- */
 #main-nav {
     display: flex;
     gap: 2.5rem;
@@ -182,12 +242,20 @@ header {
     background-color: var(--text-main);
     transition: all var(--transition-fast);
 }
-.nav-btn:hover, .nav-btn.active {
+.nav-btn:hover,
+.nav-btn.active {
     color: var(--text-main);
 }
 .nav-btn.active::after {
     width: 100%;
     left: 0;
+}
+/* FIX: focus-visible stili eklendi */
+.nav-btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+    border-radius: 2px;
+    color: var(--text-main);
 }
 
 .content-container {
@@ -198,11 +266,14 @@ header {
     width: 100%;
 }
 
+/* FIX: Animation .section.active'e taşındı — tüm tarayıcılarda güvenilir */
 .section {
     display: none;
+}
+.section.active {
+    display: block;
     animation: fadeIn 0.8s ease forwards;
 }
-.section.active { display: block; }
 
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -213,7 +284,7 @@ header {
 .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 2px; /* Album hissiyatı için dar boşluk */
+    gap: 2px;
     background: var(--border-color);
     border: 8px solid var(--card-bg);
     box-shadow: 0 5px 20px rgba(0,0,0,0.03);
@@ -248,6 +319,15 @@ header {
 .photo-card:hover .photo-overlay { opacity: 1; }
 .photo-card:hover img { transform: scale(1.05); }
 
+/* FIX: focus-visible stili eklendi — klavye kullanıcıları overlay'i görebilir */
+.photo-card:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+.photo-card:focus-visible .photo-overlay {
+    opacity: 1;
+}
+
 .overlay-title {
     font-family: var(--font-serif);
     font-size: 1.2rem;
@@ -269,12 +349,13 @@ header {
     gap: 3rem;
     align-items: center;
 }
-/* Çift/Tek sıra mantığı ile hikaye akışı */
 .place-card:nth-child(even) {
     flex-direction: row-reverse;
 }
+/* FIX: min-width: 0 eklendi — flex overflow engellenir */
 .place-image-wrapper {
     flex: 1;
+    min-width: 0;
     position: relative;
 }
 .place-image-wrapper img {
@@ -284,8 +365,10 @@ header {
     border-radius: 2px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
+/* FIX: min-width: 0 eklendi */
 .place-info {
     flex: 1;
+    min-width: 0;
 }
 .place-info h3 {
     font-size: 2rem;
@@ -324,7 +407,7 @@ header {
 .timeline-item::before {
     content: '';
     position: absolute;
-    left: -44px; /* Çizginin üzerine tam oturtma */
+    left: -44px;
     top: 6px;
     width: 9px;
     height: 9px;
@@ -356,12 +439,16 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform var(--transition-fast);
+    /* FIX: box-shadow transition'a eklendi */
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
-/* Hafif düzensizlik - scrapbook hissi */
 .memory-card:nth-child(even) { transform: rotate(1deg); }
-.memory-card:nth-child(odd) { transform: rotate(-1deg); }
-.memory-card:hover { transform: translateY(-5px) rotate(0); z-index: 2; box-shadow: 4px 8px 20px rgba(0,0,0,0.05); }
+.memory-card:nth-child(odd)  { transform: rotate(-1deg); }
+.memory-card:hover {
+    transform: translateY(-5px) rotate(0);
+    z-index: 2;
+    box-shadow: 4px 8px 20px rgba(0,0,0,0.05);
+}
 
 .memory-text {
     font-family: var(--font-serif);
@@ -372,6 +459,16 @@ header {
 }
 
 /* --- LETTER (Zarf Animasyonu) --- */
+
+/* FIX: BUG — .letter-content.hidden için CSS kuralı yoktu, mektup her zaman görünürdü */
+#letter-content.hidden {
+    display: none;
+}
+/* FIX: Programatik focus (envelope açıldıktan sonra) outline göstermemeli */
+#letter-content:focus {
+    outline: none;
+}
+
 .letter-container {
     display: flex;
     justify-content: center;
@@ -381,6 +478,12 @@ header {
 .envelope-wrapper {
     perspective: 1000px;
     cursor: pointer;
+}
+/* FIX: focus-visible stili eklendi */
+.envelope-wrapper:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 12px;
+    border-radius: 2px;
 }
 .envelope {
     position: relative;
@@ -402,7 +505,7 @@ header {
     height: 0;
     border-left: 140px solid transparent;
     border-right: 140px solid transparent;
-    border-top: 100px solid #d5cebf; /* Daha koyu ton */
+    border-top: 100px solid #d5cebf;
     transform-origin: top;
     transition: transform 0.6s ease;
     z-index: 3;
@@ -429,6 +532,7 @@ header {
     background: var(--card-bg);
     padding: 4rem 3rem;
     max-width: 650px;
+    width: 100%;
     border: 1px solid var(--border-color);
     font-family: var(--font-serif);
     line-height: 1.9;
@@ -437,6 +541,7 @@ header {
 }
 
 /* --- LIGHTBOX (Modal) --- */
+/* FIX: padding-top: 4rem — close button her zaman viewport içinde kalır */
 #lightbox {
     position: fixed;
     inset: 0;
@@ -444,7 +549,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: 4rem 1rem 1rem;
 }
 #lightbox.hidden {
     display: none;
@@ -452,7 +557,7 @@ header {
 .lightbox-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(245, 242, 235, 0.98); /* Saydam krem arka plan */
+    background: rgba(245, 242, 235, 0.98);
 }
 .lightbox-content {
     position: relative;
@@ -469,9 +574,10 @@ header {
     padding: 10px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
 }
+/* FIX: 70vh'dan 60vh'a düşürüldü — padding artışı ile denge */
 .lightbox-image-wrapper img {
     width: 100%;
-    max-height: 70vh;
+    max-height: 60vh;
     object-fit: contain;
     display: block;
 }
@@ -488,9 +594,10 @@ header {
     font-size: 0.95rem;
     color: var(--text-light);
 }
+/* FIX: px'den rem'e geçildi + artık 4rem padding ile güvenli alanda */
 .close-lightbox {
     position: absolute;
-    top: -40px;
+    top: -2.5rem;
     right: 0;
     font-size: 2.5rem;
     cursor: pointer;
@@ -498,29 +605,89 @@ header {
     border: none;
     color: var(--text-main);
     line-height: 1;
+    padding: 0.25rem 0.5rem;
+}
+/* FIX: focus-visible stili eklendi */
+.close-lightbox:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+    border-radius: 2px;
 }
 
-/* --- RESPONSIVE & MOBILE --- */
+/* --- TOUCH CİHAZLAR (Hover olmayan) --- */
+/* FIX: Nested @media'dan çıkarıldı — artık tüm ekran boyutlarında geçerli */
+@media (hover: none) {
+    .photo-overlay {
+        opacity: 1;
+        background: linear-gradient(transparent, rgba(51,49,46,0.8));
+        justify-content: flex-end;
+        padding-bottom: 1.5rem;
+    }
+    .photo-card:hover img {
+        transform: none;
+    }
+    .envelope:hover {
+        transform: none;
+    }
+}
+
+/* --- RESPONSIVE 768px --- */
 @media (max-width: 768px) {
     header { padding: 1.5rem 1rem; }
     #main-nav { gap: 1.2rem; }
-    
-    .place-card, .place-card:nth-child(even) {
+
+    /* FIX: Section title mobilde biraz küçültüldü */
+    .section-title { font-size: 1.8rem; margin-bottom: 2.5rem; }
+
+    .place-card,
+    .place-card:nth-child(even) {
         flex-direction: column;
         gap: 1.5rem;
     }
     .place-info h3 { font-size: 1.7rem; }
-    
+
     .timeline-container { padding-left: 1.5rem; }
     .timeline-item::before { left: -28px; }
     .timeline-year { margin-left: -1.5rem; }
-    
+
+    /* FIX: Rotation mobilde yatay overflow yaratıyordu — kaldırıldı */
+    .memory-card:nth-child(even),
+    .memory-card:nth-child(odd) {
+        transform: none;
+    }
+    .memory-card:hover {
+        transform: translateY(-3px);
+    }
+
     .letter-content { padding: 2.5rem 1.5rem; }
-    
-    .close-lightbox { top: -35px; right: 5px; }
-    
-    /* Hover olmayan cihazlar için grid içindeki textleri göster */
-    @media (hover: none) {
-        .photo-overlay { opacity: 1; background: linear-gradient(transparent, rgba(51,49,46,0.8)); justify-content: flex-end; padding-bottom: 1.5rem; }
+
+    /* FIX: Lightbox görseli mobilde daha küçük */
+    .lightbox-image-wrapper img {
+        max-height: 50vh;
+    }
+}
+
+/* --- RESPONSIVE 480px --- */
+@media (max-width: 480px) {
+    /* FIX: Çok küçük ekranlarda başlık taşmıyordu */
+    .welcome-title {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+
+    /* FIX: Grid tek sütuna düşer — overflow engellenir */
+    .memories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* FIX: Zarf 375px ekranda taşmaması için küçültüldü */
+    .envelope {
+        width: 240px;
+        height: 155px;
+    }
+    .envelope-flap {
+        border-left-width: 120px;
+        border-right-width: 120px;
+        border-top-width: 85px;
     }
 }
